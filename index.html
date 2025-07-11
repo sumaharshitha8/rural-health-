@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rural Health Monitoring Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f7f5;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #01796f;
+      color: white;
+      padding: 1rem;
+      font-size: 1.8rem;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem;
+      flex-wrap: wrap;
+    }
+    .card {
+      background-color: white;
+      padding: 2rem;
+      width: 280px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    .value {
+      font-size: 2rem;
+      color: #01796f;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Rural Health Monitoring Dashboard
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Body Temperature</h2>
+      <div class="value" id="temp">-- °C</div>
+    </div>
+    <div class="card">
+      <h2>Blood Pressure</h2>
+      <div class="value" id="bp">-- / -- mmHg</div>
+    </div>
+    <div class="card">
+      <h2>Heart Rate</h2>
+      <div class="value" id="hr">-- bpm</div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const res = await fetch('http://your-server-ip:5000/report');
+        const data = await res.json();
+        document.getElementById("temp").textContent = `${data.temperature} °C`;
+        document.getElementById("bp").textContent = `${data.systolic || '--'} / ${data.diastolic || '--'} mmHg`;
+        document.getElementById("hr").textContent = `${data.heart_rate || '--'} bpm`;
+      } catch (err) {
+        console.error("Failed to fetch:", err);
+      }
+    }
+
+    fetchData();
+    setInterval(fetchData, 10000);
+  </script>
+</body>
+</html>
